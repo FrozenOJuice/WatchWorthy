@@ -1,0 +1,10 @@
+[
+    {
+        "user_id": "ac35d18c-270f-4320-b5b6-49a0c31f83f9",
+        "username": "user",
+        "email": "user@example.com",
+        "hashed_password": "$2b$12$Y/Pxq8JTN.2aV1XqGy1lp.LOuJmbDg.XPdZEJMhwV3uEzh5HRlAcW",
+        "role": "member",
+        "penalties": []
+    }
+]
