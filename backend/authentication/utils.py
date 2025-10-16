@@ -15,11 +15,16 @@ def user_exists(users: List[Dict[str, Any]], username: str, email: str) -> tuple
         return True, "Email already taken"
     else:
         return False, None
-    
+
 def load_users() -> List[Dict[str, Any]]:
     with open(USERS_FILE, "r") as f:
         try:
             users = json.load(f)
+            # Ensure all users have the new fields
+            for user in users:
+                user.setdefault("watch_later", [])
+                user.setdefault("ratings", {})
+                user.setdefault("reports_made", [])
             return users
         except json.JSONDecodeError:
             return []
@@ -28,4 +33,15 @@ def save_users(users: List[Dict[str, Any]]) -> None:
     with open(USERS_FILE, "w") as f:
         json.dump(users, f, indent=4)
 
+def get_user_by_id(user_id: str) -> Optional[Dict[str, Any]]:
+    users = load_users()
+    return next((u for u in users if u["user_id"] == user_id), None)
 
+def update_user(user_id: str, updates: Dict[str, Any]) -> bool:
+    users = load_users()
+    for user in users:
+        if user["user_id"] == user_id:
+            user.update(updates)
+            save_users(users)
+            return True
+    return False

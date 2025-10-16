@@ -16,32 +16,12 @@ class MovieMetadata(BaseModel):
     description: str
     duration: int
 
-
 class Movie(BaseModel):
     id: str
     metadata: MovieMetadata
 
-
 class MovieListResponse(BaseModel):
     movies: List[Movie]
 
-
-# --- Reviews ---
-class Review(BaseModel):
-    date: str
-    user: str
-    usefulness_vote: Optional[int]
-    total_votes: Optional[int]
-    rating: Optional[float]
-    title: str
-    review: str
-
-
-class ReviewListResponse(BaseModel):
-    reviews: List[Review]
-
-
-class ReviewCreate(BaseModel):
-    review_title: str
-    review_text: str
-    rating: Optional[int] = Field(None, ge=0, le=10)
+class WatchLaterResponse(BaseModel):
+    watch_later: List[Movie]

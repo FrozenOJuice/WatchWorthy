@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, validator
+from pydantic import BaseModel, EmailStr, validator, Field
 import re
 from enum import Enum
 from typing import List, Optional
@@ -35,13 +35,14 @@ class UserCreate(BaseModel):
         if not any(c.isdigit() for c in v):
             raise ValueError('Password must contain at least one digit')
         return v
-    
+
 class UserResponse(BaseModel):
     user_id: str
     username: str
     email: str
     role: str
     penalties: List = []
+    watch_later: List[str] = []  # Only watch_later remains in user data
 
 class UserLogin(BaseModel):
     username: str
@@ -54,3 +55,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     user_id: Optional[str] = None
     role: Optional[str] = None
+
+class ReportCreate(BaseModel):
+    reason: str
+    description: Optional[str] = None

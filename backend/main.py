@@ -6,16 +6,23 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.authentication import router as authentication_router
 from backend.dashboard import router as dashboard_router
 from backend.movies import router as movies_router
-
+from backend.reviews import router as reviews_router
+from backend.ratings import router as ratings_router
+from backend.reports import router as reports_router
 
 app = FastAPI()
+
+# Include routers
 app.include_router(authentication_router.router)
 app.include_router(dashboard_router.router)
 app.include_router(movies_router.router)
+app.include_router(reviews_router.router)
+app.include_router(ratings_router.router)
+app.include_router(reports_router.router)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Your Next.js frontend
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -23,4 +30,4 @@ app.add_middleware(
 
 @app.get('/')
 async def read_root():
-    return { "message": "Backed is up"}
+    return {"message": "Backend is up"}

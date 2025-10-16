@@ -6,5 +6,13 @@
         "hashed_password": "$2b$12$Y/Pxq8JTN.2aV1XqGy1lp.LOuJmbDg.XPdZEJMhwV3uEzh5HRlAcW",
         "role": "member",
         "penalties": []
+    },
+    {
+        "user_id": "6b4e31b7-fe58-4c49-aee1-30cb30c4f9af",
+        "username": "admin",
+        "email": "admin@example.com",
+        "hashed_password": "$2b$12$Z/MJAVPsKGXUYkKgX0rIRefA1HILurcQocgXN1Hk3VLpxlrzMl9ze",
+        "role": "administrator",
+        "penalties": []
     }
 ]
