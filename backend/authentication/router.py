@@ -3,9 +3,9 @@ from fastapi.security import OAuth2PasswordRequestForm
 from backend.authentication import schemas, utils, security
 import os, uuid
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["authentication"])
 
-@router.post('/register', response_model=schemas.UserResponse)
+@router.post('/register', response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
 async def register(user: schemas.UserCreate):
     users = utils.load_users()
     exists, message = utils.user_exists(users, user.username, user.email)

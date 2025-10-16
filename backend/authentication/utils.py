@@ -27,3 +27,5 @@ def load_users() -> List[Dict[str, Any]]:
 def save_users(users: List[Dict[str, Any]]) -> None:
     with open(USERS_FILE, "w") as f:
         json.dump(users, f, indent=4)
+
+

@@ -1,40 +1,30 @@
-import json
 from fastapi import APIRouter, Depends, HTTPException, status
 from backend.authentication.security import get_current_user
 from backend.authentication.schemas import UserRole, TokenData
-from backend.authentication import utils
+from backend.authentication import utils as auth_utils
+from backend.dashboard import utils as dashboard_utils
 
-router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
+router = APIRouter(prefix="/dashboard", tags=["dashboards"])
 
 
+# -----------------------------
+# 🔹 Dashboards
+# -----------------------------
 @router.get("/member")
+@dashboard_utils.require_role(UserRole.MEMBER)
 def get_member_dashboard(current_user: TokenData = Depends(get_current_user)):
-    if current_user.role != UserRole.MEMBER:
-        raise HTTPException(status_code=403, detail="Only members can access this dashboard.")
-
-    users = utils.load_users()
-    user = next((u for u in users if u["user_id"] == current_user.user_id), None)
-
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
+    user = dashboard_utils.get_user_by_id(current_user.user_id)
     return {
         "username": user["username"],
         "role": user["role"],
         "penalties": user.get("penalties", [])
     }
 
+
 @router.get("/critic")
+@dashboard_utils.require_role(UserRole.CRITIC)
 def get_critic_dashboard(current_user: TokenData = Depends(get_current_user)):
-    if current_user.role != UserRole.CRITIC:
-        raise HTTPException(status_code=403, detail="Only critics can access this dashboard.")
-
-    users = utils.load_users()
-    user = next((u for u in users if u["user_id"] == current_user.user_id), None)
-
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
+    user = dashboard_utils.get_user_by_id(current_user.user_id)
     return {
         "username": user["username"],
         "role": user["role"],
@@ -42,12 +32,11 @@ def get_critic_dashboard(current_user: TokenData = Depends(get_current_user)):
         "special_permissions": user.get("special_permissions", [])
     }
 
-@router.get("/moderator")
-def get_moderator_dashboard(current_user: TokenData = Depends(get_current_user)):
-    if current_user.role != UserRole.MODERATOR:
-        raise HTTPException(status_code=403, detail="Only moderators can access this dashboard.")
 
-    users = utils.load_users()
+@router.get("/moderator")
+@dashboard_utils.require_role(UserRole.MODERATOR)
+def get_moderator_dashboard(current_user: TokenData = Depends(get_current_user)):
+    users = auth_utils.load_users()
     total_users = len(users)
     active_penalties = sum(len(u.get("penalties", [])) for u in users)
     reported_content = sum(len(u.get("reported_content", [])) for u in users)
@@ -62,12 +51,11 @@ def get_moderator_dashboard(current_user: TokenData = Depends(get_current_user))
         }
     }
 
-@router.get("/administrator")
-def get_administrator_dashboard(current_user: TokenData = Depends(get_current_user)):
-    if current_user.role != UserRole.ADMINISTRATOR:
-        raise HTTPException(status_code=403, detail="Only administrators can access this dashboard.")
 
-    users = utils.load_users()
+@router.get("/administrator")
+@dashboard_utils.require_role(UserRole.ADMINISTRATOR)
+def get_administrator_dashboard(current_user: TokenData = Depends(get_current_user)):
+    users = auth_utils.load_users()
     total_users = len(users)
     active_penalties = sum(len(u.get("penalties", [])) for u in users)
 
